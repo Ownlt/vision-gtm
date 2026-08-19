@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>VisionGTM</title>
+<link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+<div class="viz-root">
+
+  <header class="app">
+    <div>
+      <h1>VisionGTM</h1>
+      <div class="sub" id="header-sub">No container loaded &nbsp;·&nbsp; import a GTM export JSON</div>
+    </div>
+    <div class="header-actions">
+      <button class="import-btn" id="import-btn" title="Import a GTM container export (.json)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+        Import container JSON
+      </button>
+      <input type="file" id="import-file" accept=".json,application/json" style="display:none" />
+      <button class="clear-btn" id="clear-btn" title="Remove the loaded container" style="display:none">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+        Clear data
+      </button>
+      <button class="theme-toggle" id="theme-toggle">Dark mode</button>
+    </div>
+  </header>
+
+  <div class="stats" id="stats"></div>
+
+  <div class="filterbar">
+    <input type="search" id="search" placeholder="Search tags, triggers, variables…" />
+    <span class="chip tag" data-kind="tag"><span class="dot"></span>Tags</span>
+    <span class="chip trigger" data-kind="trigger"><span class="dot"></span>Triggers</span>
+    <span class="chip var" data-kind="variable"><span class="dot"></span>Variables</span>
+    <span class="chip builtin" data-kind="builtin"><span class="dot"></span>Built-ins</span>
+    <select id="folder-select"><option value="">All folders</option></select>
+    <select id="pause-filter">
+      <option value="all">All tags</option>
+      <option value="hide">Hide paused tags</option>
+      <option value="only">Paused tags only</option>
+    </select>
+    <label class="pause-only"><input type="checkbox" id="orphans-only" /> No dependencies only</label>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" data-view="map-view">Map</div>
+    <div class="tab" data-view="tags-view">Tags</div>
+    <div class="tab" data-view="triggers-view">Triggers</div>
+    <div class="tab" data-view="variables-view">Variables</div>
+    <div class="tab" data-view="builtins-view">Built-ins</div>
+  </div>
+
+  <main>
+    <div class="view active" id="map-view">
+      <div class="graph-pane" id="graph-pane">
+        <svg id="graph-svg"></svg>
+        <div class="map-loading" id="map-loading">
+          <div class="spinner"></div>
+          <div class="msg" id="map-loading-msg">Loading container…</div>
+        </div>
+        <div class="graph-empty" id="graph-empty">
+          <div class="empty-orbit">
+            <span class="empty-dot" style="--c: var(--series-tag)"></span>
+            <span class="empty-dot" style="--c: var(--series-trigger)"></span>
+            <span class="empty-dot" style="--c: var(--series-var)"></span>
+            <span class="empty-dot" style="--c: var(--series-builtin)"></span>
+          </div>
+          <div class="empty-title">Nothing to map yet</div>
+          <div class="empty-sub">Import a GTM container export and watch it come alive.</div>
+          <button class="empty-import-btn" id="empty-import-btn">Import container JSON</button>
+        </div>
+        <div class="hint" id="hint-box">
+          <span>Click a node to focus its connections · scroll to zoom · drag to pan</span>
+          <button class="hint-close" id="hint-close" title="Dismiss">✕</button>
+        </div>
+        <div class="legend">
+          <div class="row"><span class="dot" style="background:var(--series-tag)"></span>Tag</div>
+          <div class="row"><span class="dot" style="background:var(--series-trigger)"></span>Trigger</div>
+          <div class="row"><span class="dot" style="background:var(--series-var)"></span>Variable</div>
+          <div class="row"><span class="dot" style="background:var(--series-builtin)"></span>Built-in variable</div>
+        </div>
+        <button class="reset-view-btn" id="reset-view-btn" title="Restore the default layout, zoom, and focus — handy after dragging nodes around">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
+          Reset view
+        </button>
+        <div class="zoom-controls">
+          <button id="zoom-in">+</button>
+          <button id="zoom-out">−</button>
+          <button id="zoom-reset" title="Reset view">⤾</button>
+        </div>
+        <div class="graph-tooltip" id="graph-tooltip"></div>
+      </div>
+      <div id="detail-panel"></div>
+    </div>
+
+    <div class="view" id="tags-view"><div class="table-view" id="tags-table"></div></div>
+    <div class="view" id="triggers-view"><div class="table-view" id="triggers-table"></div></div>
+    <div class="view" id="variables-view"><div class="table-view" id="variables-table"></div></div>
+    <div class="view" id="builtins-view"><div class="table-view" id="builtins-table"></div></div>
+  </main>
+
+</div>
+
+<script src="data/gtm-data.js"></script>
+<script src="js/vendor/d3.v7.min.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
